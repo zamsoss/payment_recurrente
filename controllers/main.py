@@ -116,13 +116,13 @@ class RecurrenteController(http.Controller):
                 _logger.error("No timestamp header found")
                 return False
             
-            # Get webhook secret from acquirer
-            acquirer = request.env['payment.acquirer'].sudo().search([
+            # Get webhook secret from provider
+            provider = request.env['payment.provider'].sudo().search([
                 ('provider', '=', 'recurrente'),
                 ('state', 'in', ['enabled', 'test'])
             ], limit=1)
             
-            if not acquirer or not acquirer.recurrente_webhook_secret:
+            if not provider or not provider.recurrente_webhook_secret:
                 _logger.error("No webhook secret configured")
                 return False
             
@@ -131,7 +131,7 @@ class RecurrenteController(http.Controller):
             
             # Calculate expected signature
             expected_signature = hmac.new(
-                acquirer.recurrente_webhook_secret.encode('utf-8'),
+                provider.recurrente_webhook_secret.encode('utf-8'),
                 signed_payload.encode('utf-8'),
                 hashlib.sha256
             ).hexdigest()
@@ -276,19 +276,19 @@ class RecurrenteController(http.Controller):
         if not request.env.user.has_group('base.group_system'):
             raise Forbidden()
         
-        acquirer = request.env['payment.acquirer'].search([
+        provider = request.env['payment.provider'].search([
             ('provider', '=', 'recurrente')
         ], limit=1)
         
-        if not acquirer:
-            return "No Recurrente acquirer found"
+        if not provider:
+            return "No Recurrente provider found"
         
         test_data = {
-            'acquirer': acquirer.name,
-            'state': acquirer.state,
-            'public_key': acquirer.recurrente_public_key[:10] + '...' if acquirer.recurrente_public_key else 'Not set',
-            'secret_key': 'Set' if acquirer.recurrente_secret_key else 'Not set',
-            'webhook_secret': 'Set' if acquirer.recurrente_webhook_secret else 'Not set',
+            'provider': provider.name,
+            'state': provider.state,
+            'public_key': provider.recurrente_public_key[:10] + '...' if provider.recurrente_public_key else 'Not set',
+            'secret_key': 'Set' if provider.recurrente_secret_key else 'Not set',
+            'webhook_secret': 'Set' if provider.recurrente_webhook_secret else 'Not set',
             'webhook_url': f"{request.httprequest.host_url}payment/recurrente/webhook",
         }
         

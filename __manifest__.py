@@ -1,11 +1,11 @@
 
 {
-    'name': 'Recurrente Payment Acquirer',
+    'name': 'Recurrente Payment Provider',
     'version': '18.0.1.0.0',
-    'category': 'Accounting/Payment Acquirers',
-    'summary': 'Payment Acquirer: Recurrente Implementation for Guatemala',
+    'category': 'Accounting/Payment Providers',
+    'summary': 'Payment Provider: Recurrente Implementation for Guatemala',
     'description': """
-Recurrente Payment Acquirer
+Recurrente Payment Provider
 ===========================
 
 This module integrates Recurrente payment gateway with Odoo 18.
@@ -36,7 +36,7 @@ payment solutions for businesses with transparent pricing and no monthly fees.
     'data': [
         'security/ir.model.access.csv',
         'security/payment_recurrente_security.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
         'views/payment_recurrente_templates.xml',
         'views/payment_recurrente_views.xml',
     ],

@@ -54,9 +54,9 @@ class PaymentTransaction(models.Model):
 
         # Create checkout session or payment intent
         try:
-            if self.acquirer_id.capture_manually:
+            if self.provider_id.capture_manually:
                 # Use Payment Intent for manual capture
-                result = self.acquirer_id._recurrente_create_payment_intent(
+                result = self.provider_id._recurrente_create_payment_intent(
                     amount=self.amount,
                     currency=self.currency_id,
                     reference=self.reference,
@@ -69,7 +69,7 @@ class PaymentTransaction(models.Model):
                 redirect_url = result.get('redirect_url')
             else:
                 # Use Checkout Session for automatic capture
-                result = self.acquirer_id._recurrente_create_checkout_session(
+                result = self.provider_id._recurrente_create_checkout_session(
                     amount=self.amount,
                     currency=self.currency_id,
                     reference=self.reference,
@@ -86,7 +86,7 @@ class PaymentTransaction(models.Model):
 
             res.update({
                 'redirect_url': redirect_url,
-                'recurrente_public_key': self.acquirer_id.recurrente_public_key,
+                'recurrente_public_key': self.provider_id.recurrente_public_key,
             })
 
         except Exception as e:
@@ -158,9 +158,9 @@ class PaymentTransaction(models.Model):
         if data.get('id') and data['id'].startswith('pa_'):
             self.recurrente_payment_intent_id = data['id']
 
-        # Update acquirer reference
-        if not self.acquirer_reference and self.recurrente_payment_intent_id:
-            self.acquirer_reference = self.recurrente_payment_intent_id
+        # Update provider reference
+        if not self.provider_reference and self.recurrente_payment_intent_id:
+            self.provider_reference = self.recurrente_payment_intent_id
 
     def _recurrente_create_refund(self, amount_to_refund=None):
         """ Create a refund in Recurrente. """
@@ -171,14 +171,14 @@ class PaymentTransaction(models.Model):
             raise UserError(_("Cannot refund: Transaction is not in 'done' state"))
 
         try:
-            refund_data = self.acquirer_id._recurrente_process_refund(
+            refund_data = self.provider_id._recurrente_process_refund(
                 self.recurrente_payment_intent_id,
                 amount_to_refund
             )
             
             # Create refund transaction
             refund_tx = self.create({
-                'acquirer_id': self.acquirer_id.id,
+                'provider_id': self.provider_id.id,
                 'reference': f"R-{self.reference}",
                 'amount': -(amount_to_refund or self.amount),
                 'currency_id': self.currency_id.id,
@@ -219,7 +219,7 @@ class PaymentTransaction(models.Model):
             return
 
         try:
-            self.acquirer_id._recurrente_update_payment_intent_invoice(
+            self.provider_id._recurrente_update_payment_intent_invoice(
                 self.recurrente_payment_intent_id,
                 invoice_url
             )

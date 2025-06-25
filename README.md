@@ -1,4 +1,4 @@
-# Recurrente Payment Acquirer for Odoo 18
+# Recurrente Payment Provider for Odoo 18
 
 Este módulo integra la pasarela de pagos **Recurrente** con Odoo 18, proporcionando una solución completa para procesar pagos en Guatemala y la región.
 
@@ -228,10 +228,42 @@ Las contribuciones son bienvenidas. Por favor:
 ## Changelog
 
 ### v18.0.1.0.0
-- Versión inicial para Odoo 18
+- **MIGRACIÓN A ODOO 18**: Actualización completa para compatibilidad con Odoo 18
+- **Cambios de API**: Migración de `payment.acquirer` a `payment.provider`
+- **Campos actualizados**: Cambio de `acquirer_id` a `provider_id` y `acquirer_reference` a `provider_reference`
+- **Modelos renombrados**: Actualización de todos los modelos, vistas y referencias
 - Soporte completo para pagos únicos y recurrentes
 - Integración con webhooks
 - Soporte para reembolsos
 - Integración con facturación electrónica guatemalteca
 - Soporte para múltiples monedas
 - Pruebas unitarias completas
+
+## Migración desde versiones anteriores
+
+### Cambios importantes en Odoo 18
+
+En Odoo 18, el modelo principal para proveedores de pago cambió de `payment.acquirer` a `payment.provider`. Este módulo ha sido completamente actualizado para reflejar estos cambios:
+
+#### Cambios en modelos:
+- `payment.acquirer` → `payment.provider`
+- `payment.acquirer.recurrente` → `payment.provider.recurrente`
+
+#### Cambios en campos:
+- `acquirer_id` → `provider_id`
+- `acquirer_reference` → `provider_reference`
+
+#### Cambios en métodos:
+- `_get_compatible_acquirers()` → `_get_compatible_providers()`
+
+### Migración automática
+El módulo incluye scripts de migración que se ejecutan automáticamente durante la actualización para:
+- Actualizar referencias de modelos
+- Migrar datos existentes
+- Mantener la compatibilidad con transacciones anteriores
+
+### Verificación post-migración
+Después de la migración, verifica:
+1. Configuración del proveedor de pago en Configuración > Contabilidad > Proveedores de Pago
+2. Transacciones existentes en Contabilidad > Pagos > Transacciones
+3. Configuración de webhooks en el dashboard de Recurrente

@@ -17,7 +17,7 @@ def validate_file_structure():
         '__init__.py',
         'README.md',
         'models/__init__.py',
-        'models/payment_acquirer.py',
+        'models/payment_provider.py',
         'models/payment_transaction.py',
         'controllers/__init__.py',
         'controllers/main.py',
@@ -25,7 +25,7 @@ def validate_file_structure():
         'views/payment_recurrente_templates.xml',
         'security/ir.model.access.csv',
         'security/payment_recurrente_security.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
         'static/src/js/payment_form.js',
         'static/src/css/payment_form.css',
         'static/description/index.html',
@@ -91,7 +91,7 @@ def validate_xml_files():
         'views/payment_recurrente_views.xml',
         'views/payment_recurrente_templates.xml',
         'security/payment_recurrente_security.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
     ]
     
     all_valid = True
@@ -116,7 +116,7 @@ def validate_python_syntax():
     python_files = [
         '__init__.py',
         'models/__init__.py',
-        'models/payment_acquirer.py',
+        'models/payment_provider.py',
         'models/payment_transaction.py',
         'controllers/__init__.py',
         'controllers/main.py',

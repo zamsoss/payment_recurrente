@@ -3,10 +3,10 @@
     <data noupdate="1">
         
         <!-- Record rules for Recurrente configuration -->
-        <record id="payment_acquirer_recurrente_rule" model="ir.rule">
+        <record id="payment_provider_recurrente_rule" model="ir.rule">
             <field name="name">Payment Acquirer Recurrente: multi-company</field>
-            <field name="model_id" ref="model_payment_acquirer_recurrente"/>
-            <field name="domain_force">['|', ('acquirer_id.company_id', '=', False), ('acquirer_id.company_id', 'in', company_ids)]</field>
+            <field name="model_id" ref="model_payment_provider_recurrente"/>
+            <field name="domain_force">['|', ('provider_id.company_id', '=', False), ('provider_id.company_id', 'in', company_ids)]</field>
         </record>
         
         <!-- Security for webhook endpoints -->

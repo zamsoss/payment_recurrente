@@ -16,34 +16,34 @@ class TestRecurrente(PaymentCommon, HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         
-        cls.recurrente = cls._prepare_acquirer('recurrente', update_values={
+        cls.recurrente = cls._prepare_provider('recurrente', update_values={
             'recurrente_public_key': 'pk_test_dummy_public_key',
             'recurrente_secret_key': 'sk_test_dummy_secret_key',
             'recurrente_webhook_secret': 'whsec_test_dummy_webhook_secret',
         })
 
-    def test_acquirer_configuration(self):
-        """Test that the Recurrente acquirer is properly configured."""
+    def test_provider_configuration(self):
+        """Test that the Recurrente provider is properly configured."""
         self.assertEqual(self.recurrente.provider, 'recurrente')
         self.assertTrue(self.recurrente.recurrente_public_key)
         self.assertTrue(self.recurrente.recurrente_secret_key)
         self.assertTrue(self.recurrente.recurrente_webhook_secret)
 
-    def test_compatible_acquirers_currency_filtering(self):
+    def test_compatible_providers_currency_filtering(self):
         """Test that Recurrente is filtered out for unsupported currencies."""
         # Test with supported currency (GTQ)
         gtq_currency = self.env.ref('base.GTQ')
-        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
             currency_id=gtq_currency.id
         )
-        self.assertIn(self.recurrente, compatible_acquirers)
+        self.assertIn(self.recurrente, compatible_providers)
         
         # Test with unsupported currency (EUR)
         eur_currency = self.env.ref('base.EUR')
-        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
             currency_id=eur_currency.id
         )
-        self.assertNotIn(self.recurrente, compatible_acquirers)
+        self.assertNotIn(self.recurrente, compatible_providers)
 
     @patch('requests.post')
     def test_create_payment_intent(self, mock_post):
@@ -83,15 +83,15 @@ class TestRecurrente(PaymentCommon, HttpCase):
 
     def test_transaction_creation(self):
         """Test creating a payment transaction."""
-        tx = self._create_transaction('redirect', acquirer=self.recurrente)
+        tx = self._create_transaction('redirect', provider=self.recurrente)
         
         self.assertEqual(tx.provider, 'recurrente')
-        self.assertEqual(tx.acquirer_id, self.recurrente)
+        self.assertEqual(tx.provider_id, self.recurrente)
         self.assertFalse(tx.recurrente_payment_intent_id)  # Not set until processing
 
     def test_transaction_feedback_processing(self):
         """Test processing transaction feedback data."""
-        tx = self._create_transaction('redirect', acquirer=self.recurrente)
+        tx = self._create_transaction('redirect', provider=self.recurrente)
         
         # Simulate successful payment feedback
         feedback_data = {
@@ -108,7 +108,7 @@ class TestRecurrente(PaymentCommon, HttpCase):
         
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.recurrente_payment_intent_id, 'pa_test_payment_intent_id')
-        self.assertEqual(tx.acquirer_reference, 'pa_test_payment_intent_id')
+        self.assertEqual(tx.provider_reference, 'pa_test_payment_intent_id')
 
     def test_webhook_signature_verification(self):
         """Test webhook signature verification."""
@@ -145,7 +145,7 @@ class TestRecurrente(PaymentCommon, HttpCase):
 
     def test_webhook_endpoint(self):
         """Test webhook endpoint processing."""
-        tx = self._create_transaction('redirect', acquirer=self.recurrente)
+        tx = self._create_transaction('redirect', provider=self.recurrente)
         tx.recurrente_payment_intent_id = 'pa_test_payment_intent_id'
         
         # Prepare webhook payload
@@ -191,7 +191,7 @@ class TestRecurrente(PaymentCommon, HttpCase):
     def test_refund_processing(self, mock_post):
         """Test processing refunds."""
         # Create a successful transaction
-        tx = self._create_transaction('redirect', acquirer=self.recurrente)
+        tx = self._create_transaction('redirect', provider=self.recurrente)
         tx.recurrente_payment_intent_id = 'pa_test_payment_intent_id'
         tx._set_done()
         
@@ -236,7 +236,7 @@ class TestRecurrente(PaymentCommon, HttpCase):
                            f"Status mapping failed for {recurrente_status}")
 
     def test_api_url_generation(self):
-        """Test API URL generation based on acquirer state."""
+        """Test API URL generation based on provider state."""
         # Test mode
         self.recurrente.state = 'test'
         api_url = self.recurrente._recurrente_get_api_url()
