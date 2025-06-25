@@ -30,8 +30,6 @@ payment solutions for businesses with transparent pricing and no monthly fees.
     'license': 'LGPL-3',
     'depends': [
         'payment',
-        'website_sale',
-        'sale_subscription',
     ],
     'data': [
         'security/ir.model.access.csv',

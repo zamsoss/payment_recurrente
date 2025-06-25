@@ -14,12 +14,13 @@ _logger = logging.getLogger(__name__)
 RECURRENTE_CURRENCIES = ['GTQ', 'USD', 'USDT', 'USDC']
 
 
-class PaymentAcquirer(models.Model):
+class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     provider = fields.Selection(
         selection_add=[('recurrente', 'Recurrente')],
-        ondelete={'recurrente': 'set default'}
+        ondelete={'recurrente': 'set default'},
+        help="Payment provider"
     )
     recurrente_public_key = fields.Char(
         string="Recurrente Public Key",
