@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Payment Form Template -->
+    <template id="recurrente_form" name="Recurrente Payment Form">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="mb-3">
+                            <img src="/payment_recurrente/static/description/icon.png" 
+                                 alt="Recurrente" 
+                                 style="height: 32px; margin-right: 10px;"/>
+                            Pagar con Recurrente
+                        </h4>
+                        <p class="text-muted">
+                            Serás redirigido a la página segura de Recurrente para completar tu pago.
+                        </p>
+                        
+                        <div class="payment-methods mb-3">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <img src="/payment/static/src/img/payment_icons/visa.png" 
+                                         alt="Visa" 
+                                         style="height: 24px; margin-right: 5px;"/>
+                                </div>
+                                <div class="col-auto">
+                                    <img src="/payment/static/src/img/payment_icons/mastercard.png" 
+                                         alt="Mastercard" 
+                                         style="height: 24px; margin-right: 5px;"/>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="badge badge-info">GTQ</span>
+                                </div>
+                                <div class="col-auto">
+                                    <span class="badge badge-info">USD</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-shield"></i>
+                            <strong>Pago Seguro:</strong> Tu información de pago está protegida con encriptación de nivel bancario.
+                        </div>
+                        
+                        <!-- Hidden form for submission -->
+                        <form name="recurrente_payment_form" 
+                              t-att-action="tx_url" 
+                              method="post" 
+                              style="display: none;">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <t t-foreach="tx_values.items()" t-as="item">
+                                <input type="hidden" t-att-name="item[0]" t-att-value="item[1]"/>
+                            </t>
+                        </form>
+                        
+                        <!-- Payment button -->
+                        <button type="button" 
+                                class="btn btn-primary btn-lg btn-block recurrente-pay-button"
+                                data-toggle="tooltip" 
+                                title="Continuar con el pago">
+                            <i class="fa fa-credit-card"></i>
+                            Pagar Ahora
+                        </button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Payment Status Template -->
+    <template id="recurrente_payment_status" name="Recurrente Payment Status">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div t-if="tx_state == 'done'" class="alert alert-success">
+                                <i class="fa fa-check-circle fa-3x text-success mb-3"></i>
+                                <h4>¡Pago Exitoso!</h4>
+                                <p>Tu pago ha sido procesado correctamente.</p>
+                                <p><strong>Referencia:</strong> <span t-esc="tx_reference"/></p>
+                            </div>
+                            
+                            <div t-elif="tx_state == 'pending'" class="alert alert-warning">
+                                <i class="fa fa-clock-o fa-3x text-warning mb-3"></i>
+                                <h4>Pago en Proceso</h4>
+                                <p>Tu pago está siendo procesado. Te notificaremos cuando se complete.</p>
+                                <p><strong>Referencia:</strong> <span t-esc="tx_reference"/></p>
+                            </div>
+                            
+                            <div t-elif="tx_state == 'cancel'" class="alert alert-info">
+                                <i class="fa fa-times-circle fa-3x text-info mb-3"></i>
+                                <h4>Pago Cancelado</h4>
+                                <p>El pago fue cancelado. Puedes intentar nuevamente.</p>
+                            </div>
+                            
+                            <div t-else="" class="alert alert-danger">
+                                <i class="fa fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                                <h4>Error en el Pago</h4>
+                                <p>Hubo un problema procesando tu pago. Por favor, intenta nuevamente.</p>
+                                <p t-if="tx_error_message"><strong>Error:</strong> <span t-esc="tx_error_message"/></p>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <a href="/shop" class="btn btn-primary">Continuar Comprando</a>
+                                <a href="/my/orders" class="btn btn-secondary ml-2">Ver Mis Pedidos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Inline Payment Form (for checkout) -->
+    <template id="recurrente_inline_form" name="Recurrente Inline Form">
+        <div class="recurrente-inline-form">
+            <div class="form-group">
+                <label class="col-form-label">
+                    <img src="/payment_recurrente/static/description/icon.png" 
+                         alt="Recurrente" 
+                         style="height: 20px; margin-right: 5px;"/>
+                    Recurrente
+                </label>
+                <div class="text-muted small">
+                    Pago seguro con tarjeta de crédito o débito
+                </div>
+            </div>
+            
+            <div class="payment-icons mt-2">
+                <img src="/payment/static/src/img/payment_icons/visa.png" alt="Visa" style="height: 20px; margin-right: 5px;"/>
+                <img src="/payment/static/src/img/payment_icons/mastercard.png" alt="Mastercard" style="height: 20px; margin-right: 5px;"/>
+                <span class="badge badge-light ml-2">GTQ</span>
+                <span class="badge badge-light">USD</span>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Admin Configuration Help -->
+    <template id="recurrente_admin_help" name="Recurrente Admin Help">
+        <div class="alert alert-info">
+            <h5><i class="fa fa-info-circle"></i> Configuración de Recurrente</h5>
+            <p>Para configurar Recurrente correctamente:</p>
+            <ol>
+                <li>Obtén tus claves API desde tu dashboard de Recurrente en "Developers and API"</li>
+                <li>Configura las claves pública y secreta en los campos correspondientes</li>
+                <li>Configura el webhook secret para verificar las notificaciones</li>
+                <li>Registra la URL del webhook en tu dashboard de Recurrente</li>
+                <li>Activa el proveedor de pagos cuando esté listo para producción</li>
+            </ol>
+            <p><strong>URL del Webhook:</strong> <code t-esc="webhook_url"/></p>
+        </div>
+    </template>
+    
+</odoo>

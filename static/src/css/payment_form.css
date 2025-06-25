@@ -1,0 +1,140 @@
+
+/* Recurrente Payment Form Styles */
+
+.recurrente-inline-form {
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    background-color: #f8f9fa;
+}
+
+.recurrente-inline-form .form-group {
+    margin-bottom: 10px;
+}
+
+.recurrente-inline-form .payment-icons img {
+    filter: grayscale(0.3);
+    transition: filter 0.3s ease;
+}
+
+.recurrente-inline-form .payment-icons img:hover {
+    filter: grayscale(0);
+}
+
+.recurrente-pay-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.recurrente-pay-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recurrente-pay-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.recurrente-pay-button .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Payment status styles */
+.payment-status-card {
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-status-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .recurrente-inline-form {
+        padding: 10px;
+    }
+    
+    .payment-icons img {
+        height: 16px;
+    }
+    
+    .recurrente-pay-button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+}
+
+/* Admin configuration styles */
+.recurrente-config-help {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.recurrente-config-help code {
+    background-color: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Webhook URL display */
+.webhook-url-display {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+/* Payment method selection */
+.o_payment_option_card.recurrente {
+    border-color: #28a745;
+}
+
+.o_payment_option_card.recurrente:hover {
+    border-color: #1e7e34;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+}
+
+/* Loading overlay */
+.recurrente-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.recurrente-loading-spinner {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.recurrente-loading-spinner .fa-spinner {
+    font-size: 2rem;
+    color: #28a745;
+    margin-bottom: 10px;
+}

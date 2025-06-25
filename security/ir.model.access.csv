@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_acquirer_recurrente_user,payment.acquirer.recurrente.user,model_payment_acquirer_recurrente,base.group_user,1,0,0,0
+access_payment_acquirer_recurrente_manager,payment.acquirer.recurrente.manager,model_payment_acquirer_recurrente,account.group_account_manager,1,1,1,1
+access_payment_transaction_refund_wizard_user,payment.transaction.refund.wizard.user,model_payment_transaction_refund_wizard,base.group_user,1,1,1,1

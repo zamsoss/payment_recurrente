@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Payment Acquirer Form View -->
+    <record id="acquirer_form_recurrente" model="ir.ui.view">
+        <field name="name">acquirer.form.recurrente</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='acquirer_display']" position="after">
+                <group attrs="{'invisible': [('provider', '!=', 'recurrente')]}" string="Recurrente Credentials">
+                    <field name="recurrente_public_key" password="False" attrs="{'required': [('provider', '=', 'recurrente'), ('state', '!=', 'disabled')]}"/>
+                    <field name="recurrente_secret_key" password="True" attrs="{'required': [('provider', '=', 'recurrente'), ('state', '!=', 'disabled')]}"/>
+                    <field name="recurrente_webhook_secret" password="True" attrs="{'required': [('provider', '=', 'recurrente'), ('state', '!=', 'disabled')]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Recurrente Configuration Form -->
+    <record id="view_payment_acquirer_recurrente_form" model="ir.ui.view">
+        <field name="name">payment.acquirer.recurrente.form</field>
+        <field name="model">payment.acquirer.recurrente</field>
+        <field name="arch" type="xml">
+            <form string="Recurrente Configuration">
+                <sheet>
+                    <group>
+                        <group string="Basic Configuration">
+                            <field name="acquirer_id"/>
+                            <field name="enable_subscriptions"/>
+                            <field name="enable_digital_dollars"/>
+                        </group>
+                        <group string="Webhook Configuration">
+                            <field name="webhook_url" readonly="1"/>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Webhook Setup:</strong><br/>
+                                Copy the webhook URL above and configure it in your Recurrente dashboard under "Developers and API" section.
+                                Make sure to select the following events:
+                                <ul>
+                                    <li>payment_intent.succeeded</li>
+                                    <li>payment_intent.payment_failed</li>
+                                    <li>payment_intent.canceled</li>
+                                    <li>checkout.session.completed</li>
+                                    <li>checkout.session.expired</li>
+                                    <li>refund.succeeded</li>
+                                    <li>refund.failed</li>
+                                </ul>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Recurrente Configuration Tree -->
+    <record id="view_payment_acquirer_recurrente_tree" model="ir.ui.view">
+        <field name="name">payment.acquirer.recurrente.tree</field>
+        <field name="model">payment.acquirer.recurrente</field>
+        <field name="arch" type="xml">
+            <tree string="Recurrente Configurations">
+                <field name="acquirer_id"/>
+                <field name="enable_subscriptions"/>
+                <field name="enable_digital_dollars"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Payment Transaction Form View Enhancement -->
+    <record id="transaction_form_recurrente" model="ir.ui.view">
+        <field name="name">payment.transaction.form.recurrente</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.transaction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='acquirer_data']" position="after">
+                <group attrs="{'invisible': [('provider', '!=', 'recurrente')]}" string="Recurrente Data">
+                    <field name="recurrente_payment_intent_id" readonly="1"/>
+                    <field name="recurrente_checkout_session_id" readonly="1"/>
+                    <field name="recurrente_refund_id" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_recurrente_refund" 
+                        string="Refund" 
+                        type="object" 
+                        class="btn-primary"
+                        attrs="{'invisible': ['|', ('provider', '!=', 'recurrente'), ('state', '!=', 'done')]}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Payment Transaction Tree View Enhancement -->
+    <record id="transaction_tree_recurrente" model="ir.ui.view">
+        <field name="name">payment.transaction.tree.recurrente</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.transaction_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='acquirer_reference']" position="after">
+                <field name="recurrente_payment_intent_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Refund Wizard -->
+    <record id="view_payment_transaction_refund_wizard" model="ir.ui.view">
+        <field name="name">payment.transaction.refund.wizard.form</field>
+        <field name="model">payment.transaction.refund.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Process Refund">
+                <group>
+                    <field name="transaction_id" readonly="1"/>
+                    <field name="amount"/>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button name="action_process_refund" string="Process Refund" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Menu Items -->
+    <record id="menu_payment_acquirer_recurrente" model="ir.ui.menu">
+        <field name="name">Recurrente Configuration</field>
+        <field name="parent_id" ref="payment.menu_payment_acquirer"/>
+        <field name="action" ref="action_payment_acquirer_recurrente"/>
+        <field name="sequence">10</field>
+    </record>
+    
+    <!-- Actions -->
+    <record id="action_payment_acquirer_recurrente" model="ir.actions.act_window">
+        <field name="name">Recurrente Configuration</field>
+        <field name="res_model">payment.acquirer.recurrente</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your Recurrente payment gateway settings
+            </p>
+            <p>
+                Set up your Recurrente integration by configuring API keys, webhook settings, and payment options.
+            </p>
+        </field>
+    </record>
+    
+</odoo>
