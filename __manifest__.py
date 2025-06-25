@@ -29,13 +29,11 @@ payment solutions for businesses with transparent pricing and no monthly fees.
     'website': 'https://www.recurrente.com',
     'license': 'LGPL-3',
     'depends': [
-        'payment',
+        'account_payment',
     ],
     'data': [
         'security/ir.model.access.csv',
-        'security/payment_recurrente_security.xml',
-        'data/payment_provider_data.xml',
-        'views/payment_recurrente_templates.xml',
+        'data/payment_method_data.xml',
         'views/payment_recurrente_views.xml',
     ],
     'assets': {

@@ -1,4 +1,6 @@
+
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_payment_provider_recurrente_user,payment.provider.recurrente.user,model_payment_provider_recurrente,base.group_user,1,0,0,0
-access_payment_provider_recurrente_manager,payment.provider.recurrente.manager,model_payment_provider_recurrente,account.group_account_manager,1,1,1,1
-access_payment_transaction_refund_wizard_user,payment.transaction.refund.wizard.user,model_payment_transaction_refund_wizard,base.group_user,1,1,1,1
+access_payment_provider_user,payment.provider.user,model_payment_provider,base.group_user,1,0,0,0
+access_payment_provider_manager,payment.provider.manager,model_payment_provider,account.group_account_manager,1,1,1,1
+access_payment_transaction_user,payment.transaction.user,model_payment_transaction,base.group_user,1,0,0,0
+access_payment_transaction_manager,payment.transaction.manager,model_payment_transaction,account.group_account_manager,1,1,1,1
